@@ -7,9 +7,37 @@ Colorblind safe color palette from colorbrewer2.org.
 
 body {
   background-color: #edf8e9;
-  color: #74c476;
+  color: #252525;
   text-align: center;
+  margin: 0;
 }
 h1{
-  color: #006d2c;
+  color: #252525;
+  padding: 5px;
+  margin: 0;
+}
+#body-container {
+  background-color: #bdd7e7;
+  max-width: 1000px;
+  margin: auto;
+  min-height: 100vh;
+  border:2px solid #045a8d;
+  border-radius: 25px;
+  overflow: hidden;
+}
+#header {
+  background-color: #3182bd;
+}
+#profile-picture {
+  float: left;
+}
+#welcome-text {
+  padding-top:25px;
+  font-size:25px;
+}
+#research-interests {
+  text-align: left;
+  font-size: 25px;
+  position: relative;
+  left: 50px;
 }

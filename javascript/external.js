@@ -7,5 +7,12 @@
 // const y = "mapping";
 // const out= x + y;
 // document.write(out);
-user_name = window.prompt("Please enter your name", "Type your name here");
-document.write(user_name);
+// user_name = window.prompt("Please enter your name", "Type your name here");
+// document.write(user_name);
+a = 22;
+const b =33;
+document.writeln(a+b);
+document.writeln("<br>");
+document.writeln(a += b);
+document.writeln("<br>");
+document.writeln(a += b);

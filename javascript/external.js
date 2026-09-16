@@ -1,3 +1,5 @@
+let userName = prompt('What is your name?')
+
 arr = ["Mael","Eric","Randall","James"];
 for (var i=0; i < arr.length; i++)
 {

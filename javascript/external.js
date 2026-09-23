@@ -7,6 +7,11 @@ for (var i=0; i < arr.length; i++)
   document.writeln(arr[i],"<br>");
 }
 */
+var webmaps=
+[
+  ["All Trails", "https://www.alltrails.com/", "All trails was designed to help people find hikes and properties of them."],
+  ["Flight Radar 24", "https://www.flightradar24.com/", "Flight radar locates and gathers information on flights and planes around the world."]
+];
 function welcome()
 {
     let a = "Please enter your name.";
@@ -19,12 +24,12 @@ function welcome()
  function webmap_table()
  {
    document.write("<table width=100%>");
-   for (var row=0; row < 2; row++)
+   for (var row=0; row < webmaps.length; row++)
    {
      document.write("<tr>");
-     for (var column=0; column < 3; column++)
+     for (var column=0; column < webmaps[0].length; column++)
      {
-       document.write("<td>" + row + "," + column + "</td>");
+       document.write("<td>" + webmaps[row][column] + "</td>");
      }
      document.write("</tr>");
    }

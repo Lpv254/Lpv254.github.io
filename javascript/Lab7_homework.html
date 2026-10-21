@@ -6,50 +6,72 @@
   <title> Lab 7 HW </title>
   <link rel = "stylesheet" href = "https://js.arcgis.com/4.21/esri/themes/light/main.css"/>
   <script src = "https://js.arcgis.com/4.21/"> </script>
+  <!-- the code below helps with styling and position-->
   <style>
     html, body, #viewDiv {
       padding: 0;
       margin: 0;
       height: 100%;
       width: 100%;}
+
+      #titleDiv {
+        position: absolute;
+        top: 10px;
+        left: 45%;
+        padding: 5px 15px;}
+
+      #footerDiv {
+        position: absolute;
+        bottom: 0px;
+        left: 45%;
+      }
+
+      }
   </style>
   <!--The code below inputs the map services and my ufo layer-->
   <script>
-  require(["esri/Map", "esri/views/MapView", "esri/layers/TileLayer", "esri/layers/FeatureLayer", "esri/layers/GraphicsLayer", "esri/tasks/QueryTask", "esri/tasks/support/Query", "dojo/_base/array", "dojo/dom", "dojo/on", "dojo/domReady!"],
-  function (Map, MapView, TileLayer, FeatureLayer, GraphicsLayer, QueryTask, Query, arrayUtils, dom, on) {
-
+  require(["esri/Map", "esri/views/MapView", "esri/layers/TileLayer", "esri/layers/FeatureLayer", "esri/layers/GraphicsLayer", "esri/tasks/QueryTask", "esri/tasks/support/Query", "dojo/_base/array", "dojo/dom", "dojo/on", "esri/widgets/Legend", "dojo/domReady!", ],
+  function (Map, MapView, TileLayer, FeatureLayer, GraphicsLayer, QueryTask, Query, arrayUtils, dom, on, Legend) {
+//code for the roads
     var TransportationLayer = new TileLayer({
       url: "https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Transportation/MapServer"
     });
-
+//this is my ufo layer
     var UfoLayer = new FeatureLayer({
       url: "https://services.arcgis.com/V6ZHFr6zdgNZuVG0/ArcGIS/rest/services/UFOSightings/FeatureServer/0"
     })
-
+//this shows the oceans on the basemap
     var map = new Map({
       basemap: "oceans",
       layers: [TransportationLayer, UfoLayer]
     });
-
+//below centers the map when you launch it
     var view = new MapView ({
       container: "viewDiv",
       map: map,
       zoom: 5,
       center: [-98.5833, 39.8333]
       });
+// the code below inputs a legend as a widget
+      var legend = new Legend({
+        view: view
+      })
+      view.ui.add(legend, "bottom-left");
 
       view.when(function(){
         view.ui.add("optionsDiv", "bottom-right");
         on(dom.byId("doBtn"), "click", doQuery);
     });
+    //this will get the shapes and durations
       var shapeName = dom.byId("shapeSelect");
       var value = dom.byId("valSelect");
-
+      //below tells the map to load the query and run it
       function doQuery(){
         resultsLayer.removeAll();
         params.where = "shape_1 = '" + shapeName.value + "' AND duration__seconds_ > " + value.value;
         qTask.execute(params).then(getResults).catch(promiseRejected);
       }
+      //this is where the popup is shown and the map zooms in/out
       function getResults(response){
         var ufoResults = arrayUtils.map(
           response.features,
@@ -68,10 +90,12 @@
       });
       dom.byId("printResults").innerHTML = ufoResults.length + " results found!";
     }
+    //this will give you a error message if it doesnt work
     function promiseRejected(error){
       console.error("Promise rejected: ", error.message, " Parameter values: ",
         shapeName.value, value.value);
     }
+    //this tells what shows up in the popup
     var ufoUrl = "https://services.arcgis.com/V6ZHFr6zdgNZuVG0/ArcGIS/rest/services/UFOSightings/FeatureServer/0";
     var popupTemplate = {
       title: "{city}, {state}",
@@ -102,9 +126,16 @@
   <!-- this works with the function openTask and tells the button to work-->
   <input type="button" value="Go" onclick="openTask()" />
   <div id="viewDiv"></div>
+  <!-- this is the page title-->
+  <div id="titleDiv">
+    <h1>UFO Sightings</h1>
+  </div>
+  <!-- this below inputs the footer-->
+  <div id="footerDiv">
+    &copy; Jordan Shute 2026
+  </div>
   <div class="esri-widget" id="optionsDiv">
     <h2> UFO Sightings by Shape and Duration </h2>
-
     <select class="esri-widget" id="shapeSelect">
       <option value="light">Light</option>
       <option value="disk">Disk</option>

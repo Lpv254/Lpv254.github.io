@@ -26,7 +26,12 @@
         left: 45%;
       }
 
+      #menuDiv {
+        position: absolute;
+        top: 15px;
+        right: 15px;
       }
+
   </style>
   <!--The code below inputs the map services and my ufo layer-->
   <script>
@@ -114,7 +119,9 @@
   </script>
 </head>
 <body>
+  <div id="viewDiv"></div>
   <!-- this is the dropdown of the 6 links-->
+<div id="menuDiv">
   <select id="taskSelect">
     <option value="simple_mapping.html">1. Simple Mapping</option>
     <option value="tile_layer.html">2. Tile Layers</option>
@@ -125,7 +132,8 @@
   </select>
   <!-- this works with the function openTask and tells the button to work-->
   <input type="button" value="Go" onclick="openTask()" />
-  <div id="viewDiv"></div>
+</div>
+
   <!-- this is the page title-->
   <div id="titleDiv">
     <h1>UFO Sightings</h1>

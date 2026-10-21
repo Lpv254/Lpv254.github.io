@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf.8" />
+  <meta name="viewport" content = "initial-scale, maximum-scale=1, user-scalable=no"/>
+  <title> Lab 7 HW </title>
+  <link rel = "stylesheet" href = "https://js.arcgis.com/4.21/esri/themes/light/main.css"/>
+  <script src = "https://js.arcgis.com/4.21/"> </script>
+  <style>
+    html, body, #viewDiv {
+      padding: 0;
+      margin: 0;
+      height: 100%;
+      width: 100%;}
+  </style>
+  <!--this is what opens the page in a new tab-->
+  <script>
+    function openTask() {
+      var page = document.getElementById("taskSelect").value;window.open(page, "_blank");
+    }
+  </script>
+</head>
+<body>
+  <!-- this is the dropdown of the 6 links-->
+  <select id="taskSelect">
+    <option value="simple_mapping.html">1. Simple Mapping</option>
+    <option value="tile_layer.html">2. Tile Layers</option>
+    <option value="dynamic_layers.html">3. Dynamic Layers</option>
+    <option value="on_event.html">4. On Event</option>
+    <option value="basemap_gallery.html">5. Basemap Gallery</option>
+    <option value="query_task.html">6. Query Task</option>
+  </select>
+  <!-- this works with the function openTask and tells the button to work-->
+  <input type="button" value="Go" onclick="openTask()" />
+</body>
+</html>

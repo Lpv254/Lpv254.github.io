@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf.8" />
-  <meta name="viewport" content = "initial-scale, maximum-scale=1, user-scalable=no"/>
+  <meta name="viewport" content = "initial-scale=1, maximum-scale=1, user-scalable=no"/>
   <title> Lab 7 HW </title>
   <link rel = "stylesheet" href = "https://js.arcgis.com/4.21/esri/themes/light/main.css"/>
   <script src = "https://js.arcgis.com/4.21/"> </script>
@@ -13,8 +13,77 @@
       height: 100%;
       width: 100%;}
   </style>
-  <!--this is what opens the page in a new tab-->
+  <!--The code below inputs the map services and my ufo layer-->
   <script>
+  require(["esri/Map", "esri/views/MapView", "esri/layers/TileLayer", "esri/layers/FeatureLayer", "esri/layers/GraphicsLayer", "esri/tasks/QueryTask", "esri/tasks/support/Query", "dojo/_base/array", "dojo/dom", "dojo/on", "dojo/domReady!"],
+  function (Map, MapView, TileLayer, FeatureLayer, GraphicsLayer, QueryTask, Query, arrayUtils, dom, on) {
+
+    var TransportationLayer = new TileLayer({
+      url: "https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Transportation/MapServer"
+    });
+
+    var UfoLayer = new FeatureLayer({
+      url: "https://services.arcgis.com/V6ZHFr6zdgNZuVG0/ArcGIS/rest/services/UFOSightings/FeatureServer/0"
+    })
+
+    var map = new Map({
+      basemap: "oceans",
+      layers: [TransportationLayer, UfoLayer]
+    });
+
+    var view = new MapView ({
+      container: "viewDiv",
+      map: map,
+      zoom: 5,
+      center: [-98.5833, 39.8333]
+      });
+
+      view.when(function(){
+        view.ui.add("optionsDiv", "bottom-right");
+        on(dom.byId("doBtn"), "click", doQuery);
+    });
+      var shapeName = dom.byId("shapeSelect");
+      var value = dom.byId("valSelect");
+
+      function doQuery(){
+        resultsLayer.removeAll();
+        params.where = "shape_1 = '" + shapeName.value + "' AND duration__seconds_ > " + value.value;
+        qTask.execute(params).then(getResults).catch(promiseRejected);
+      }
+      function getResults(response){
+        var ufoResults = arrayUtils.map(
+          response.features,
+          function(feature){
+            feature.popupTemplate = popupTemplate;
+            return feature;
+          }
+        );
+      resultsLayer.addMany(ufoResults);
+      view.goTo(ufoResults).then(function(){
+        view.popup.open({
+          features: ufoResults,
+          featureMenuOpen: true,
+          updateLocationEnabled: true
+        });
+      });
+      dom.byId("printResults").innerHTML = ufoResults.length + " results found!";
+    }
+    function promiseRejected(error){
+      console.error("Promise rejected: ", error.message, " Parameter values: ",
+        shapeName.value, value.value);
+    }
+    var ufoUrl = "https://services.arcgis.com/V6ZHFr6zdgNZuVG0/ArcGIS/rest/services/UFOSightings/FeatureServer/0";
+    var popupTemplate = {
+      title: "{city}, {state}",
+      content: "<b>Shape:</b> {shape_1}" + "<br><b>Duration:</b> {duration__hours_min_}" + "<br><b>Country:</b> {country}"
+    };
+
+    var resultsLayer = new GraphicsLayer();
+    map.add(resultsLayer);
+    var qTask = new QueryTask({ url: ufoUrl });
+    var params = new Query({ returnGeometry: true, outFields: ["*"]})
+  });
+//this is what opens the page in a new tab
     function openTask() {
       var page = document.getElementById("taskSelect").value;window.open(page, "_blank");
     }
@@ -32,5 +101,28 @@
   </select>
   <!-- this works with the function openTask and tells the button to work-->
   <input type="button" value="Go" onclick="openTask()" />
+  <div id="viewDiv"></div>
+  <div class="esri-widget" id="optionsDiv">
+    <h2> UFO Sightings by Shape and Duration </h2>
+
+    <select class="esri-widget" id="shapeSelect">
+      <option value="light">Light</option>
+      <option value="disk">Disk</option>
+      <option value="triangle">Triangle</option>
+      <option value="circle">Circle</option>
+      <option value="fireball">Fireball</option>
+    </select>
+
+    <select class="esri-widget" id="valSelect">
+      <option value="600">longer than 10 minutes</option>
+      <option value="3600">longer than 1 hour</option>
+      <option value="7200">longer than 2 hours</option>
+    </select>
+      <br>
+      <br>
+    <button class="esri-widget" id="doBtn">Do Query</button>
+    <br>
+    <p><span id="printResults"></span></p>
+  </div>
 </body>
 </html>
